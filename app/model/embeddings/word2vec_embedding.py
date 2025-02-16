@@ -11,10 +11,17 @@ nltk.download('punkt_tab')
 
 
 class Word2VecEmbedding(BaseEmbeddingModel):
-    """Implements the word2vec embedding model."""
+    """Word2Vec embedding model"""
 
-    def __init__(self, model_name: str = "word2vec-google-news-300"):
-        self.word_vectors = api.load(model_name)
+    _instance = None
+    _model = None
+
+    def __new__(cls):
+        """Singleton-based pattern to prevent reloading at every request."""
+        if cls._instance is None:
+            cls._instance = super(Word2VecEmbedding, cls).__new__(cls)
+            cls._model = api.load("word2vec-google-news-300")
+        return cls._instance
 
     def encode_text(self, text: str) -> np.ndarray:
         """
@@ -22,9 +29,9 @@ class Word2VecEmbedding(BaseEmbeddingModel):
         Computes the average of the word vectors in the text.
         """
         tokens = word_tokenize(text.lower())
-        word_vecs = [self.word_vectors[word] for word in tokens if word in self.word_vectors]
+        word_vecs = [self._model[word] for word in tokens if word in self._model]
 
         if not word_vecs:
-            return np.zeros(self.word_vectors.vector_size)
+            return np.zeros(self._model.vector_size)
 
         return np.mean(word_vecs, axis=0)
