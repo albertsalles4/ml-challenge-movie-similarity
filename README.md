@@ -1,6 +1,7 @@
 # ML Challenge – Movie Similarity Model
 
 This is a challenge to compare text embeddings. The tasks are the following:
+
 1. Research and align on the best similarity approach.
 2. Design and deploy a modular and scalable infrastructure for the model.
 3. Build and showcase a demo of the solution.
@@ -15,13 +16,21 @@ source venv/bin/activate # Activate the virtual environment
 pip install -r requirements.txt
 ```
 
-### Usage
+### Running the app
 
-The main file contains an example of how to use the code. It loads the data and runs the winner models for each pair
-with available data.
+The app is a FastAPI application. You can run it with the following command:
 
 ```bash
-streamlit run main.py
+python main.py
+```
+
+A Swagger UI is available at http://localhost:8000/docs.
+
+Additionally, you can run the app with Docker:
+
+```bash
+docker build -t movie-similarity-api .
+docker run -p 8000:8000 movie-similarity-api
 ```
 
 ## Author
