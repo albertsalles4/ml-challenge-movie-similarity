@@ -8,5 +8,5 @@ router = APIRouter()
 
 @router.post("/search")
 def search_endpoint(body: SearchRequest, movie_service=Depends(get_movie_service)):
-    results = movie_service.find_similar_movies(body.query, body.top_n)
+    results = movie_service.find_similar_movies(body.query, body.top_n, body.filters)
     return results
