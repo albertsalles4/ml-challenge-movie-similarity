@@ -4,26 +4,33 @@ on:
   push:
     branches:
       - deploy  # Runs when pushing to the main branch
-  workflow_dispatch:  # Allows manual trigger from GitHub Actions UI
 
 jobs:
   build-and-push:
+    name: Build and Push Docker Image to AWS ECR
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🛎️ Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: 🔑 Log in to GitHub Container Registry (GHCR)
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: 🏗️ Build Docker Image
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, Tag and Push Docker Image
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY }}
+          IMAGE_TAG: latest
         run: |
-          docker build -t ghcr.io/${{ github.actor }}/fastapi-app:latest .
-
-      - name: 🚀 Push Docker Image to GHCR
-        run: |
-          docker push ghcr.io/${{ github.actor }}/fastapi-app:latest
-
-      - name: ✅ Successfully Pushed
-        run: echo "Docker image pushed to ghcr.io/${{ github.actor }}/fastapi-app:latest"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
