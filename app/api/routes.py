@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from app.api.schemas import SearchRequest
-from app.dependencies.dependencies import get_movie_service
+from app.config.dependencies import get_movie_service
 
 router = APIRouter()
 
