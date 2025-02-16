@@ -1,8 +1,14 @@
 import gensim.downloader as api
+import nltk
 import numpy as np
 from nltk.tokenize import word_tokenize
 
 from app.model.embeddings.base_embedding import BaseEmbeddingModel
+
+# Download necessary resources
+nltk.data.path.append("/tmp")
+nltk.download('punkt', download_dir="/tmp")
+nltk.download('punkt_tab', download_dir="/tmp")
 
 
 class Word2VecEmbedding(BaseEmbeddingModel):
