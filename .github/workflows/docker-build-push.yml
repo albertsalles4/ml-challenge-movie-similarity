@@ -1,0 +1,29 @@
+name: Build and Push Docker Image to GHCR
+
+on:
+  push:
+    branches:
+      - deploy  # Runs when pushing to the main branch
+  workflow_dispatch:  # Allows manual trigger from GitHub Actions UI
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🔑 Log in to GitHub Container Registry (GHCR)
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: 🏗️ Build Docker Image
+        run: |
+          docker build -t ghcr.io/${{ github.actor }}/fastapi-app:latest .
+
+      - name: 🚀 Push Docker Image to GHCR
+        run: |
+          docker push ghcr.io/${{ github.actor }}/fastapi-app:latest
+
+      - name: ✅ Successfully Pushed
+        run: echo "Docker image pushed to ghcr.io/${{ github.actor }}/fastapi-app:latest"
