@@ -18,4 +18,5 @@ class MovieService:
             lambda emb: self.similarity_metric.compute_similarity(query_embedding, emb)
         )
         results = self.movies_df.sort_values(by="similarity", ascending=False).head(top_n)
-        return results[["description", "similarity"]].to_dict(orient="records")
+        return (results[["title", "overview", "release_date", "popularity", "vote_average", "vote_count", "similarity"]]
+                .to_dict(orient="records"))
