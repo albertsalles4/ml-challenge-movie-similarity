@@ -33,6 +33,29 @@ docker build -t movie-similarity-api .
 docker run -p 8000:8000 movie-similarity-api
 ```
 
+### Frontend
+
+The frontend is a Streamlit application. You can run it with the following command:
+
+```bash
+streamlit run frontend/main.py
+```
+
+Additionally, you can run the frontend with Docker:
+
+```bash
+docker build -f frontend.Dockerfile -t movie-similarity-frontend .
+docker run -p 8501:8501 movie-similarity-frontend
+```
+
+### Docker Compose
+
+You can run the entire application with Docker Compose:
+
+```bash
+docker-compose up
+```
+
 ## Author
 
 [Albert Sallés](https://www.linkedin.com/in/albert-salles/) – [github.com/albertsalles4](https://github.com/albertsalles4)
