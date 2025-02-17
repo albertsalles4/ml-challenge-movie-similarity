@@ -3,6 +3,7 @@ from pydantic_settings import BaseSettings
 
 from app.config.settings import Settings
 from app.model.embeddings.base_embedding import BaseEmbeddingModel
+from app.model.embeddings.transformer_embedding import TransformerEmbedding
 from app.model.embeddings.word2vec_embedding import Word2VecEmbedding
 from app.model.similarity.base_similarity import BaseSimilarityMetric
 from app.model.similarity.cosine_similarity import CosineSimilarity
@@ -17,6 +18,10 @@ def get_embedding_model(app_settings=Depends(get_settings)) -> BaseEmbeddingMode
     """Returns the embedding model"""
     if app_settings.EMBEDDING_MODEL == "word2vec":
         return Word2VecEmbedding()
+
+    if app_settings.EMBEDDING_MODEL == "transformer":
+        return TransformerEmbedding()
+
     return Word2VecEmbedding()
 
 
